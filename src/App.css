@@ -21,8 +21,9 @@
 
 .error404 {
   font-family: "Roboto", sans-serif;
-  padding: 1em;
+  padding: 1em 2em 1em 2em;
   background-color: #d56868df;
+  border-radius: 15px;
   color: black;
 }
 .content {

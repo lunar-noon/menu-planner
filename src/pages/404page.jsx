@@ -4,6 +4,7 @@ const PageNotFound = () => {
   return (
   <div>
     <br />
+    <br />
     <hr />
     <div className="error404">
       <br />
