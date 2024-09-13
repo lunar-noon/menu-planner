@@ -6,7 +6,6 @@ export default function Layout() {
     <div className='App'>
       <GlobalNavigation />
       <div className='content'>
-        <br />
         <Outlet />
       </div>
     </div>

@@ -1,12 +1,4 @@
-import { useState } from 'react'
-
 export default function Home() {
-
-  const [clicks, setClicks] = useState(0)
-
-  function increment() {
-    setClicks(clicks+1)
-  }
 
   return(
     <>

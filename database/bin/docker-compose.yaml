@@ -1,0 +1,46 @@
+
+services:
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+
+  springboot-app:
+    image: greenorca/m294-project-api:1.0
+    container_name: m294-project-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING.DATA.MONGODB.HOST: mongo
+      SPRING.DATA.MONGODB.PORT: 27017
+      SPRING.DATA.MONGODB.AUTHENTICATION-DATABASE: admin
+      SPRING.DATA.MONGODB.USERNAME: root
+      SPRING.DATA.MONGODB.PASSWORD: example
+      SPRING.DATA.MONGODB.DATABASE: demo-store
+    depends_on:
+      - mongo
+
+volumes:
+  data:
+    driver: local
