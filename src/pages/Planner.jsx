@@ -66,17 +66,18 @@ export default function Planner() {
   const saveEdit = (id) => {
     if (!isValid) return
 
+    const updatedDocument = { id, content: editValues }
     fetch(`http://localhost:8080/menus/documents/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(editValues)
+      body: JSON.stringify(updatedDocument)
     })
-    .then(() => {
-        setMenus(menus.map(menu => menu.id === id ? { ...menu, content: editValues } : menu))
-        setEditMode(null)
-      })
+    .then((updatedMenu) => {
+      setMenus(menus.map(menu => menu.id === id ? { ...menu, content: editValues } : menu))
+      setEditMode(null)
+    })
   }
 
   
@@ -98,7 +99,7 @@ export default function Planner() {
         </thead>
         <tbody>
           { menus.map(m => <tr key={ m.id }>
-            <td>{ editMode === m.id ? (<input type="text" name="name" value={editValues.name || ''} onChange={handleChange} required />) : (m.content.name)}</td>
+            <td>{ editMode === m.id ? (<input type="text" name="name" minLength="2" maxLength="60" value={editValues.name || ''} onChange={handleChange} required />) : (m.content.name)}</td>
             <td>
               { editMode === m.id ? (
                 <>
@@ -114,7 +115,7 @@ export default function Planner() {
             <td>
               { editMode === m.id ? (
                 <>
-                    <input type="number" name="duration" min="1" max="600" required value={editValues.duration || ''} onChange={handleChange} />
+                    <input type="number" name="duration" min="1" max="1440" required value={editValues.duration || ''} onChange={handleChange} />
                     <span> Minuten</span>
                   <div className='number-box'>
                     <span>{(editValues.duration / 60).toFixed(1)} Stunden</span>

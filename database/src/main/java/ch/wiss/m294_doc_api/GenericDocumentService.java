@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Service
 public class GenericDocumentService {
@@ -28,8 +27,7 @@ public class GenericDocumentService {
     
 
     public boolean deleteById(String collectionName, String id) {
-        validateCollectionName(collectionName);
-        validateId(id);
+
         GenericDocument document = mongoTemplate.findById(id, GenericDocument.class, collectionName);
         if (document != null) {
             mongoTemplate.remove(document, collectionName);
@@ -38,26 +36,13 @@ public class GenericDocumentService {
         return false;  // Return false if document is not found
     }
 
-    private void validateCollectionName(String collectionName) {
-        if (!StringUtils.hasText(collectionName)) {
-            throw new IllegalArgumentException("Collection name must not be empty");
+    public Optional<GenericDocument> updateById(String collectionName, String id, GenericDocument updatedDocument) {
+        Optional<GenericDocument> existingDocument = findById(collectionName, id);
+        if (existingDocument.isPresent()) {
+            updatedDocument.setId(id);  // Ensure the ID is preserved
+            mongoTemplate.save(updatedDocument, collectionName);  // Save will insert or update
+            return Optional.of(updatedDocument);
         }
-    }
-
-    private void validateDocument(GenericDocument document) {
-        if (document == null) {
-            throw new IllegalArgumentException("Document must not be null");
-        }
-    }
-
-    private void validateId(String id) {
-        if (!StringUtils.hasText(id)) {
-            throw new IllegalArgumentException("ID must not be empty");
-        }
-    }
-
-    public GenericDocument updateDocument(String collectionName, String id, GenericDocument document) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateDocument'");
+        return Optional.empty();  // Return empty if no document was found with the given ID
     }
 }

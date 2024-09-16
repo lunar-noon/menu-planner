@@ -31,7 +31,7 @@ export default function AddMenu() {
         }
       }
   
-      e.preventDefault();
+      e.preventDefault()
       fetch("http://localhost:8080/menus/documents", {
         method: "POST",
         headers: {
@@ -63,7 +63,7 @@ export default function AddMenu() {
         <div>
           <fieldset className='first-field'>
             <legend>Menü Name: </legend>
-            <input type="text" name="name" onChange={store} required />
+            <input type="text" name="name" minLength="2" maxLength="60" onChange={store} required />
           </fieldset>
         </div>
         
@@ -77,7 +77,7 @@ export default function AddMenu() {
         <div>
           <fieldset>
             <legend>Dauer in min: </legend>
-            <input className='number-input' type="number" name="duration" min="1" max="600" onChange={store} required />
+            <input className='number-input' type="number" name="duration" min="1" max="1440" onChange={store} required />
           </fieldset>
         </div>
   
