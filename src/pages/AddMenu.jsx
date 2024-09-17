@@ -39,7 +39,6 @@ export default function AddMenu() {
         },
         body: JSON.stringify(submitData)
       }).then(() => {
-        console.log(JSON.stringify(submitData))
         e.target.reset()
       })
     }

@@ -13,60 +13,23 @@ const isValidURL = (url) => {
 }
 export default function Planner() {
   const [menus, setMenus] = useState([])
+  const [originalMenus, setOriginalMenus] = useState([])
   const [editMode, setEditMode] = useState(null)
   const [editValues, setEditValues] = useState({})
   const [isValid, setIsValid] = useState(false)
   const [errors, setErrors] = useState({})
-  const [isSorted, setIsSorted] = useState(false)
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: null })
 
 
   useEffect(() => {
     console.log("Mounted")
     fetch("http://localhost:8080/menus/documents")
    .then(r => r.json())
-   .then(qs => setMenus(qs))
-  }, [])
-
-
-  const deleteEntry = (id) => {
-    fetch(`http://localhost:8080/menus/documents/${id}`, { method: "DELETE"})
-    .then(() => {
-      setMenus(menus.filter(menu => menu.id !== id))
+   .then(qs => {
+      setMenus(qs)
+      setOriginalMenus(qs)
     })
-  }
-
-  const sortRow = () => {
-    if (isSorted === false) {
-
-
-
-
-      const sortList = [...menus]
-      sortList.reverse()
-      setMenus(sortList)
-
-
-
-
-      setIsSorted(true)
-    } else if (isSorted === true) {
-      setIsSorted(false)
-
-      const sortList = [...menus];
-      sortList.reverse();
-      setMenus(sortList);
-
-      console.log("Helo is sorted")
-    }
-    
-  }
-  /*
-  const sortRowDesc = () => {
-    const sortList = [...menus];
-    sortList.reverse();
-    setMenus(sortList);
-  }
-  */
+  }, [])
 
 
   useEffect(() => {
@@ -88,6 +51,43 @@ export default function Planner() {
     setErrors(newErrors)
     setIsValid(Object.keys(newErrors).length === 0)
   }, [editValues])
+
+
+  const deleteEntry = (id) => {
+    fetch(`http://localhost:8080/menus/documents/${id}`, { method: "DELETE"})
+    .then(() => {
+      setMenus(menus.filter(menu => menu.id !== id))
+    })
+  }
+
+  
+  const sortRow = (key, isNumeric = false) => {
+    let direction = 'asc'
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc'
+    }
+
+    const sortedMenus = [...menus].sort((a, b) => {
+      const aValue = a.content[key]
+      const bValue = b.content[key]
+  
+      if (isNumeric) {
+        return direction === 'asc' ? aValue - bValue : bValue - aValue
+      } else {
+        if (aValue < bValue) return direction === 'asc' ? -1 : 1
+        if (aValue > bValue) return direction === 'asc' ? 1 : -1
+        return 0
+      }
+    })
+  
+    setMenus(sortedMenus)
+    setSortConfig({ key, direction })
+  }
+  const resetRow = () => {
+    setMenus(originalMenus)
+    setSortOrder(null)
+  }
+
 
   const startEdit = (menu) => {
     setEditMode(menu.id)
@@ -129,26 +129,29 @@ export default function Planner() {
       <table>
         <thead>
           <tr>
-            <th>Name 
-              { isSorted ? (
-                <img src={arrowUp} onClick={sortRow} className="arrow-up" alt="Sort arrow up" />
+            <th>
+              <span onClick={resetRow} style={{ cursor: 'pointer' }}>Name</span>
+              { sortConfig.key === 'name' && sortConfig.direction === 'asc' ? (
+                <img src={arrowUp} onClick={() => sortRow('name', false)} className="arrow-up" alt="Sort arrow up" />
               ) : (
-                <img src={arrowDown} onClick={sortRow} className="arrow-down" alt="Sort arrow down" />
+                <img src={arrowDown} onClick={() => sortRow('name', false)} className="arrow-down" alt="Sort arrow down" />
               )}
             </th>
             <th>Link zum Menü</th>
-            <th>Dauer 
-              { isSorted ? (
-                <img src={arrowUp} onClick={sortRow} className="arrow-up" alt="Sort arrow up" />
+            <th>
+              <span onClick={resetRow} style={{ cursor: 'pointer' }}>Dauer</span>
+              { sortConfig.key === 'duration' && sortConfig.direction === 'asc' ? (
+                <img src={arrowUp} onClick={() => sortRow('duration', true)} className="arrow-up" alt="Sort arrow up" />
               ) : (
-                <img src={arrowDown} onClick={sortRow} className="arrow-down" alt="Sort arrow down" />
+                <img src={arrowDown} onClick={() => sortRow('duration', true)} className="arrow-down" alt="Sort arrow down" />
               )}
             </th>
-            <th>Ernährungsform 
-              { isSorted ? (
-                <img src={arrowUp} onClick={sortRow} className="arrow-up" alt="Sort arrow up" />
+            <th>
+              <span onClick={resetRow} style={{ cursor: 'pointer' }}>Ernährungsform</span>
+              { sortConfig.key === 'ernaehrungsform' && sortConfig.direction === 'asc' ? (
+                <img src={arrowUp} onClick={() => sortRow('ernaehrungsform', false)} className="arrow-up" alt="Sort arrow up" />
               ) : (
-                <img src={arrowDown} onClick={sortRow} className="arrow-down" alt="Sort arrow down" />
+                <img src={arrowDown} onClick={() => sortRow('ernaehrungsform', false)} className="arrow-down" alt="Sort arrow down" />
               )}
             </th>
             <th>Eigene Notizen</th>
@@ -178,14 +181,14 @@ export default function Planner() {
             </td>
             <td>
               { editMode === m.id ? (
-                <>
-                    <input type="number" name="duration" min="1" max="1440" required value={editValues.duration || ''} onChange={handleChange} />
-                    <span> Minuten</span>
+                <div className='number-container'>
+                  <input type="number" name="duration" min="1" max="1440" required value={editValues.duration || ''} onChange={handleChange} />
+                  <span> Minuten</span>
                   <div className='number-box'>
                     <span>{(editValues.duration / 60).toFixed(1)} Stunden</span>
                   </div>
                   {errors.duration && <span><hr />{errors.duration}</span>}
-                </>
+                </div>
                 ) : (
                   <>
                     <div className='number-box'>
