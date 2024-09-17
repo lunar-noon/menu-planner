@@ -111,13 +111,20 @@ table, th, td {
   border-collapse: collapse;
   text-wrap: wrap;
 }
-table {
-  border: none
+table, td:last-of-type, th:last-of-type {
+  border: none;
 }
 th {
   position: sticky;
+  white-space: nowrap;
   background-color: rgb(21, 96, 130);
   color: white;
+}
+th img {
+  display: inline-block;
+  margin-left: 10px;
+  width: 15px;
+  vertical-align: middle;
 }
 tr:nth-child(even) {
   background-color: rgba(216, 224, 231, 0.4);
@@ -167,7 +174,8 @@ form {
   margin-right: 10px;
 }
 fieldset {
-  background-color: #eeeeee;
+  background-color: rgba(216, 224, 231, 0.4);
+  border-radius: 5px;
   margin-top: -7px;
 }
 legend {
@@ -179,14 +187,25 @@ legend {
 input {
   margin: 5px;
   padding: 3px;
+  border-radius: 5px;
+  border: 1.5px solid black;
+  background-color: lightcyan;
 }
-textarea{
+textarea {
   margin-top: 5px;
   padding: 5px;
   height: 50px;
+  min-height: 50px;
+  max-height: 150px;
+  min-width: 163.55px;
+  max-width: 380px;
+  border-radius: 5px;
+  border: 1.5px solid black;
+  background-color: lightcyan;
 }
 .input-button {
   background-color: lightblue;
-  border: 1px solid rgba(255, 255, 255);
+  border: 1px solid rgb(100, 100, 100);
   margin: 10px 10px 10px 10px;
 }
+

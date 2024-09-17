@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import arrowDown from '../assets/caret-down-solid.svg'
+import arrowUp from '../assets/caret-up-solid.svg'
 
 const isValidURL = (url) => {
   try {
@@ -15,6 +17,7 @@ export default function Planner() {
   const [editValues, setEditValues] = useState({})
   const [isValid, setIsValid] = useState(false)
   const [errors, setErrors] = useState({})
+  const [isSorted, setIsSorted] = useState(false)
 
 
   useEffect(() => {
@@ -32,25 +35,62 @@ export default function Planner() {
     })
   }
 
+  const sortRow = () => {
+    if (isSorted === false) {
+
+
+
+
+      const sortList = [...menus]
+      sortList.reverse()
+      setMenus(sortList)
+
+
+
+
+      setIsSorted(true)
+    } else if (isSorted === true) {
+      setIsSorted(false)
+
+      const sortList = [...menus];
+      sortList.reverse();
+      setMenus(sortList);
+
+      console.log("Helo is sorted")
+    }
+    
+  }
+  /*
+  const sortRowDesc = () => {
+    const sortList = [...menus];
+    sortList.reverse();
+    setMenus(sortList);
+  }
+  */
+
 
   useEffect(() => {
-    // Validate the input fields whenever editValues change
-    const { name, link, duration, ernaehrungsform } = editValues;
-    let newErrors = {};
-    const valid = name && link && duration && ernaehrungsform && isValidURL(link);
+    const { name, link, duration } = editValues
+    let newErrors = {}
+
+    if (!name) {
+      newErrors.name = "Name is required"
+    } else if (name.length < 2 || name.length > 60) {
+      newErrors.name = "Name must be between 2 and 60 characters"
+    }
+    if (!isValidURL(link)) newErrors.link = "Link must be a valid URL"
+    if (!duration) {
+      newErrors.duration = "Duration is required"
+    } else if (duration < 1 || duration > 1440) {
+      newErrors.duration = "Duration must be between 1 and 1440 minutes"
+    }
     
-    if (!name) newErrors.name = "Name is required";
-    if (!link) newErrors.link = "Link is required";
-    if (!isValidURL(link)) newErrors.link = "Link must be a valid URL";
-    if (!duration) newErrors.duration = "Duration is required";
-    if (!ernaehrungsform) newErrors.ernaehrungsform = "Ernährungsform is required";
-    
-    setErrors(newErrors);
-    setIsValid(valid);
-  }, [editValues]);
+    setErrors(newErrors)
+    setIsValid(Object.keys(newErrors).length === 0)
+  }, [editValues])
 
   const startEdit = (menu) => {
-    setEditMode(menu.id);
+    setEditMode(menu.id)
     setEditValues({ ...menu.content })
   }
 
@@ -89,17 +129,41 @@ export default function Planner() {
       <table>
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Name 
+              { isSorted ? (
+                <img src={arrowUp} onClick={sortRow} className="arrow-up" alt="Sort arrow up" />
+              ) : (
+                <img src={arrowDown} onClick={sortRow} className="arrow-down" alt="Sort arrow down" />
+              )}
+            </th>
             <th>Link zum Menü</th>
-            <th>Dauer</th>
-            <th>Ernährungsform</th>
+            <th>Dauer 
+              { isSorted ? (
+                <img src={arrowUp} onClick={sortRow} className="arrow-up" alt="Sort arrow up" />
+              ) : (
+                <img src={arrowDown} onClick={sortRow} className="arrow-down" alt="Sort arrow down" />
+              )}
+            </th>
+            <th>Ernährungsform 
+              { isSorted ? (
+                <img src={arrowUp} onClick={sortRow} className="arrow-up" alt="Sort arrow up" />
+              ) : (
+                <img src={arrowDown} onClick={sortRow} className="arrow-down" alt="Sort arrow down" />
+              )}
+            </th>
             <th>Eigene Notizen</th>
             <th>Optionen</th>
           </tr>
         </thead>
         <tbody>
           { menus.map(m => <tr key={ m.id }>
-            <td>{ editMode === m.id ? (<input type="text" name="name" minLength="2" maxLength="60" value={editValues.name || ''} onChange={handleChange} required />) : (m.content.name)}</td>
+            <td>{ editMode === m.id ? (
+              <>
+                <input type="text" name="name" minLength="2" maxLength="60" value={editValues.name || ''} onChange={handleChange} required />
+                {errors.name && <span>{errors.name}</span>}
+              </>
+              ) : (m.content.name)}
+            </td>
             <td>
               { editMode === m.id ? (
                 <>
@@ -120,6 +184,7 @@ export default function Planner() {
                   <div className='number-box'>
                     <span>{(editValues.duration / 60).toFixed(1)} Stunden</span>
                   </div>
+                  {errors.duration && <span><hr />{errors.duration}</span>}
                 </>
                 ) : (
                   <>

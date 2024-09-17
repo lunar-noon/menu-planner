@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 
 export default function AddMenu() {
@@ -39,6 +39,7 @@ export default function AddMenu() {
         },
         body: JSON.stringify(submitData)
       }).then(() => {
+        console.log(JSON.stringify(submitData))
         e.target.reset()
       })
     }
@@ -88,7 +89,7 @@ export default function AddMenu() {
             <label className='radio-label' htmlFor="mischkost">Mischkost</label>
             <input className='radio-input' type="radio" id="vegetarisch" name="ernaehrungsform" value={"Vegetarisch"} onChange={store} required />
             <label className='radio-label' htmlFor="vegetarisch">Vegetarisch</label>
-            <input className='radio-input' type="radio" id="vegan "name="ernaehrungsform" value={"Vegan"} onChange={store} required />
+            <input className='radio-input' type="radio" id="vegan"name="ernaehrungsform" value={"Vegan"} onChange={store} required />
             <label className='radio-label' htmlFor="vegan">Vegan</label>
           </fieldset>
         </div>
