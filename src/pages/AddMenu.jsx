@@ -19,7 +19,7 @@ export default function AddMenu() {
 
   const submit = (e) => {
     if (entries.name==="" || entries.link==="" || entries.duration==="" || entries.ernaehrungsform==="") {
-      alert("Ok...\n\n\n\n\n\n\n\n\n\nHOW???")
+      alert("Ok...\n\n\n\n\n\n\n\n\n\nHOW???\nPlease enter some details -.-")
     } else {
       const submitData = {
         content: {
