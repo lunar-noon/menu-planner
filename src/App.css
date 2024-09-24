@@ -4,9 +4,10 @@
   */
   margin: 0 auto;
   padding: 2rem;
-  padding: 3%;
+  padding: 1.5%;
   text-align: center;
-  color: black;
+  color-scheme: light dark;
+  color: light-dark(black, white);
 }
 
 .error404 {
@@ -22,7 +23,6 @@ body {
 }
 html {
   width: 100%;
-  height: 100%;
 }
 .App {
   width: 100%;
@@ -53,7 +53,7 @@ html {
 .navigation a {
   display: inline-block;
   border: solid 1px rgba(0, 0, 0, 0);
-  color: black;
+  color: light-dark(black, white);
   padding: 0.4em 0.5em 0.4em 0.5em;
   font-size: 30px;
 }
@@ -104,7 +104,7 @@ hr {
   cursor: grabbing;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(170, 197, 220, 0.4);
+  background: light-dark(rgba(170, 197, 220, 0.4), rgb(170, 197, 220));
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(45, 107, 136, 0.906);
@@ -128,6 +128,9 @@ th {
   background-color: rgb(21, 96, 130);
   color: white;
 }
+tr {
+  color: black;
+}
 th p {
   white-space: nowrap;
 }
@@ -139,15 +142,16 @@ th img {
   vertical-align: middle;
 }
 tr:nth-child(even) {
-  background-color: rgba(216, 224, 231, 0.4);
+  background-color: light-dark(rgba(216, 224, 231, 0.4), rgb(216, 224, 231));
 }
 tr:nth-child(odd) {
-  background-color: rgba(169, 189, 209, 0.5);
+  background-color: light-dark(rgba(169, 189, 209, 0.5), rgb(169, 189, 209));
 }
 .table-button {
   background-color: lightblue;
   border: 1px solid rgba(255, 255, 255);
   margin: 10px 10px 10px 10px;
+  color: black;
 }
 
 .input-box {
@@ -201,6 +205,7 @@ input {
   padding: 3px;
   border-radius: 5px;
   border: 1.5px solid black;
+  color: black;
   background-color: lightcyan;
 }
 textarea {
@@ -213,11 +218,13 @@ textarea {
   max-width: 380px;
   border-radius: 5px;
   border: 1.5px solid black;
+  color: black;
   background-color: lightcyan;
 }
 .input-button {
   background-color: lightblue;
   border: 1px solid rgb(100, 100, 100);
   margin: 10px 10px 10px 10px;
+  color: black;
 }
 
